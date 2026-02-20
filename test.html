@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        #output {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+        }
+        button {
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <h1>CCC SmartAssist - Chat Test</h1>
+    <button onclick="testChat()">Test Chat Endpoint</button>
+    <button onclick="testSettings()">Test Settings</button>
+    <button onclick="clearOutput()">Clear</button>
+    <div id="output"></div>
+
+    <script>
+        const API_BASE = 'backend/api.php';
+        const output = document.getElementById('output');
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : '';
+            output.innerHTML += `<div class="${className}">[${timestamp}] ${message}</div>`;
+        }
+
+        function clearOutput() {
+            output.innerHTML = '';
+        }
+
+        async function testSettings() {
+            try {
+                log('Testing settings endpoint...');
+                const res = await fetch(`${API_BASE}?request=settings`);
+                const data = await res.json();
+                log('Settings response: ' + JSON.stringify(data, null, 2), 'success');
+            } catch (error) {
+                log('Settings error: ' + error.message, 'error');
+            }
+        }
+
+        async function testChat() {
+            try {
+                log('Testing chat endpoint...');
+                
+                const testData = {
+                    sessionId: 'test-session-' + Date.now(),
+                    message: 'Hello, how do I enroll?',
+                    history: [],
+                    userId: 'test-user',
+                    systemInstruction: 'You are a helpful assistant for Cainta Catholic College.'
+                };
+                
+                log('Sending: ' + JSON.stringify(testData, null, 2));
+                
+                const res = await fetch(`${API_BASE}?request=chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(testData)
+                });
+                
+                log(`Response status: ${res.status} ${res.statusText}`);
+                
+                const data = await res.json();
+                
+                if (data.error) {
+                    log('Error response: ' + JSON.stringify(data, null, 2), 'error');
+                } else {
+                    log('Success! Response: ' + JSON.stringify(data, null, 2), 'success');
+                }
+            } catch (error) {
+                log('Chat error: ' + error.message, 'error');
+                console.error(error);
+            }
+        }
+    </script>
+</body>
+</html>
