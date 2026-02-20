@@ -3,7 +3,7 @@
 Welcome to the **CCC SmartAssist** project documentation. This system is an AI-powered chatbot and student portal designed to assist students of Cainta Catholic College (CCC) with inquiries about enrollment, tuition, scholarships, and general academic information.
 
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" alt="CCC SmartAssist Banner" width="100%" />
+ 
 </div>
 
 ---
